@@ -1,11 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EASE } from '../../lib/motion';
 
 const LINKS = [
   { id: 'about', label: 'About', type: 'anchor' },
-  { id: 'services', label: 'Services', type: 'route', to: '/services' },
+  // Points at Duality's "Two dimensions" section (#practice) rather than a
+  // dedicated id, since that's the homepage's services teaser. matchPath
+  // also lights this up while browsing the standalone /services pages.
+  { id: 'practice', label: 'Services', type: 'anchor', matchPath: '/services' },
   { id: 'journey', label: 'Journey', type: 'anchor' },
   { id: 'achievements', label: 'Achievements', type: 'anchor' },
   { id: 'publications', label: 'Publications', type: 'anchor' },
@@ -28,7 +31,8 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
   }, []);
 
   // Highlights whichever section currently occupies the middle of the viewport.
-  // Only anchor links live on this page; the Services route is matched separately.
+  // "Services" is aliased to #practice (see LINKS above), so it lights up
+  // like any other anchor once that section is in view.
   useEffect(() => {
     if (!onHome) return;
     const targets = LINKS.filter((l) => l.type === 'anchor')
@@ -121,7 +125,9 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
 
           <ul className="hidden items-center gap-8 lg:flex">
             {LINKS.map((link) => {
-              const isCurrent = link.type === 'route' ? location.pathname.startsWith(link.to) : active === link.id;
+              const isCurrent = link.matchPath
+                ? location.pathname.startsWith(link.matchPath) || active === link.id
+                : active === link.id;
               const underline = (
                 <span
                   className={`absolute -bottom-0.5 left-0 h-px w-full origin-left bg-umber transition-transform duration-500 ease-silk ${
@@ -134,25 +140,18 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
 
               return (
                 <li key={link.id}>
-                  {link.type === 'route' ? (
-                    <Link to={link.to} aria-current={isCurrent ? 'true' : undefined} className={className}>
-                      {link.label}
-                      {underline}
-                    </Link>
-                  ) : (
-                    <a
-                      href={`#${link.id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        go(link.id);
-                      }}
-                      aria-current={isCurrent ? 'true' : undefined}
-                      className={className}
-                    >
-                      {link.label}
-                      {underline}
-                    </a>
-                  )}
+                  <a
+                    href={`#${link.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      go(link.id);
+                    }}
+                    aria-current={isCurrent ? 'true' : undefined}
+                    className={className}
+                  >
+                    {link.label}
+                    {underline}
+                  </a>
                 </li>
               );
             })}
@@ -228,24 +227,16 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
 
                   return (
                     <li key={link.id} className="overflow-hidden border-b border-hairline">
-                      {link.type === 'route' ? (
-                        <motion.div {...motionProps}>
-                          <Link to={link.to} onClick={() => setOpen(false)} className="flex items-baseline gap-4">
-                            {rowContent}
-                          </Link>
-                        </motion.div>
-                      ) : (
-                        <motion.a
-                          href={`#${link.id}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            go(link.id);
-                          }}
-                          {...motionProps}
-                        >
-                          {rowContent}
-                        </motion.a>
-                      )}
+                      <motion.a
+                        href={`#${link.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          go(link.id);
+                        }}
+                        {...motionProps}
+                      >
+                        {rowContent}
+                      </motion.a>
                     </li>
                   );
                 })}

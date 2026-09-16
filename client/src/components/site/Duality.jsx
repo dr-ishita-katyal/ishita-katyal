@@ -33,7 +33,7 @@ export default function Duality({ expertise = [] }) {
           <MaskedLines lines={['Two dimensions of', 'the same discipline']} lineClassName="text-heading" />
         </SectionTitle>
         <Reveal as="p" delay={0.1} className="lede mt-6">
-          Reconstructive and aesthetic surgery draw on one body of technique. These are the areas her
+          Reconstructive and aesthetic surgery draw on one body of technique. These are the areas my
           training and practice have centred on.
         </Reveal>
       </div>
@@ -102,16 +102,16 @@ export default function Duality({ expertise = [] }) {
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col items-start gap-4 max-w-measure sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[0.8rem] leading-relaxed text-clay">
-          These reflect documented areas of professional training and interest, not a list of procedures
-          offered at any particular clinic.
-        </p>
+      <div className="mt-14 flex justify-center">
         <Link
           to="/services"
-          className="link-wipe shrink-0 whitespace-nowrap text-[0.78rem] font-semibold uppercase tracking-[0.1em] text-ink"
+          className="group/cta inline-flex items-center gap-2.5 whitespace-nowrap rounded-full border border-umber px-7 py-3.5 text-[0.75rem] font-semibold uppercase tracking-[0.14em] text-umber transition-colors duration-500 ease-silk hover:bg-umber hover:text-ivory focus-visible:bg-umber focus-visible:text-ivory"
         >
-          View all services →
+          View all services
+          <ArrowUpRight
+            aria-hidden="true"
+            className="h-4 w-4 transition-transform duration-500 ease-silk group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
+          />
         </Link>
       </div>
     </Section>

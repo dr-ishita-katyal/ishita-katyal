@@ -49,7 +49,7 @@ export default function Services() {
               <MaskedLines lines={['Areas of', 'expertise']} lineClassName="text-title" />
             </h1>
             <Reveal as="p" delay={0.12} className="lede mt-7 max-w-[46ch]">
-              The areas of plastic, reconstructive and aesthetic surgery her specialist training and
+              The areas of plastic, reconstructive and aesthetic surgery my specialist training and
               practice have concentrated on. Select an area to read more.
             </Reveal>
           </div>

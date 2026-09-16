@@ -19,7 +19,7 @@ export default function Workshops({ workshops = [] }) {
           <MaskedLines lines={['Workshops &', 'scientific engagement']} lineClassName="text-heading" />
         </SectionTitle>
         <Reveal as="p" delay={0.1} className="lede mt-6">
-          Meetings and teaching sessions she has organised or taken part in.
+          Meetings and teaching sessions I have organised or taken part in.
         </Reveal>
       </div>
 

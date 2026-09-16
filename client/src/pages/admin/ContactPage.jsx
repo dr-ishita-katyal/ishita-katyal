@@ -59,7 +59,7 @@ export default function ContactPage() {
         <TextArea label="Intro" rows={2} value={data.intro || ''} onChange={(e) => set('intro', e.target.value)} className="sm:col-span-2" />
       </Group>
 
-      <Group title="How to reach her">
+      <Group title="How to reach you">
         <TextInput label="Phone" value={data.phone || ''} onChange={(e) => set('phone', e.target.value)} placeholder="+91 …" />
         <TextInput label="Email" type="email" value={data.email || ''} onChange={(e) => set('email', e.target.value)} />
         <TextInput label="WhatsApp" value={data.whatsapp || ''} onChange={(e) => set('whatsapp', e.target.value)} hint="Number with country code; becomes a wa.me link." />

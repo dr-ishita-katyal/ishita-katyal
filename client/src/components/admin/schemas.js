@@ -158,7 +158,7 @@ export const schemas = {
       { name: 'title', label: 'Title', type: 'text', required: true, span: 2 },
       { name: 'date', label: 'Date', type: 'text', span: 1 },
       { name: 'location', label: 'Location', type: 'text', span: 1 },
-      { name: 'role', label: 'Her role', type: 'text', span: 1, placeholder: 'Organiser' },
+      { name: 'role', label: 'Your role', type: 'text', span: 1, placeholder: 'Organiser' },
       { name: 'link', label: 'Link', type: 'text', span: 2 },
       { name: 'description', label: 'Description', type: 'textarea', span: 2 },
       { name: 'image', label: 'Image', type: 'image', span: 2 },

@@ -127,7 +127,7 @@ export default function Hero({ profile, appointmentUrl }) {
                 }}
                 className="btn-outline"
               >
-                <span>Explore her journey</span>
+                <span>Explore my journey</span>
               </a>
             </motion.div>
           </div>

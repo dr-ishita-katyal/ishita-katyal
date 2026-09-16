@@ -28,7 +28,7 @@ export default function Expertise({ expertise = [] }) {
             <MaskedLines lines={['Areas of', 'expertise']} lineClassName="text-heading" />
           </SectionTitle>
           <Reveal as="p" delay={0.1} className="lede mt-6 max-w-[38ch]">
-            The areas of plastic and reconstructive surgery her specialist training has concentrated on.
+            The areas of plastic and reconstructive surgery my specialist training has concentrated on.
           </Reveal>
 
           {/* Image preview well — only appears when an area carries an image. */}
@@ -113,7 +113,7 @@ export default function Expertise({ expertise = [] }) {
             <Reveal delay={0.1} className="mt-14">
               <h3 className="font-display text-[1.35rem] text-ink">Documented areas of interest</h3>
               <p className="mt-2 max-w-[48ch] text-[0.85rem] leading-relaxed text-clay">
-                Further interests listed on her professional profile.
+                Further interests listed on my professional profile.
               </p>
 
               <ul className="mt-6 flex flex-wrap gap-x-2 gap-y-2">
