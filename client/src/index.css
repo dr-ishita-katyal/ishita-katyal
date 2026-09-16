@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ivory: #faf7f2;
+    --sand: #f1e7da;
+    --ink: #241811;
+    --umber: #6f4e3a;
+    --gilt: #a07a52;
+    --line: rgba(45, 33, 27, 0.14);
+    --nav-h: 72px;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Anchored sections must clear the sticky masthead. */
+    scroll-padding-top: calc(var(--nav-h) + 8px);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ivory text-ink font-sans antialiased;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--ivory);
+  }
+
+  /* One visible, consistent focus ring everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--umber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer components {
+  /* ---- Page shell -------------------------------------------------- */
+  .shell {
+    @apply mx-auto w-full max-w-shell px-gutter;
+  }
+
+  .rule {
+    @apply h-px w-full bg-line;
+  }
+
+  /* ---- Type treatments --------------------------------------------- */
+  .marker {
+    @apply font-sans text-2xs uppercase tracking-[0.22em] text-clay;
+    font-weight: 600;
+  }
+
+  .lede {
+    @apply text-lede text-cocoa/85;
+    max-width: 62ch;
+  }
+
+  .prose-warm p {
+    @apply mb-5 text-[1.0625rem] leading-[1.75] text-cocoa/85;
+    max-width: 62ch;
+  }
+  .prose-warm p:last-child {
+    @apply mb-0;
+  }
+
+  /* ---- Buttons ------------------------------------------------------ */
+  .btn {
+    @apply relative inline-flex select-none items-center justify-center gap-2.5
+      px-7 py-[0.95rem] text-[0.78rem] font-semibold uppercase tracking-[0.16em]
+      transition-colors duration-500 ease-silk;
+    min-height: 48px; /* thumb-friendly on mobile */
+  }
+
+  .btn-solid {
+    @apply btn bg-ink text-ivory;
+  }
+  .btn-solid::after {
+    content: '';
+    @apply absolute inset-0 origin-bottom scale-y-0 bg-umber transition-transform duration-500 ease-silk;
+  }
+  .btn-solid:hover::after,
+  .btn-solid:focus-visible::after {
+    @apply origin-top scale-y-100;
+  }
+  .btn-solid > * {
+    @apply relative z-10;
+  }
+
+  .btn-outline {
+    @apply btn border border-ink/25 text-ink;
+  }
+  .btn-outline:hover,
+  .btn-outline:focus-visible {
+    @apply border-ink bg-ink text-ivory;
+  }
+
+  /* Text link with an underline that wipes in from the left. */
+  .link-wipe {
+    @apply relative inline-block;
+  }
+  .link-wipe::after {
+    content: '';
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-current transition-transform duration-500 ease-silk;
+  }
+  .link-wipe:hover::after,
+  .link-wipe:focus-visible::after {
+    @apply origin-left scale-x-100;
+  }
+
+  /* ---- Surfaces ----------------------------------------------------- */
+  /* Fine paper grain, laid over the page as a fixed veil so the whole site
+     shares one sheet of paper rather than a texture per section. */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.2;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  }
+
+  /* ---- Admin ------------------------------------------------------- */
+  .field-label {
+    @apply mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-clay;
+  }
+
+  .field-input {
+    @apply w-full rounded-[3px] border border-line bg-cream px-3.5 py-2.5 text-[0.95rem]
+      text-ink transition-colors duration-200 placeholder:text-clay/50;
+  }
+  .field-input:hover {
+    @apply border-ink/25;
+  }
+  .field-input:focus {
+    @apply border-umber outline-none ring-1 ring-umber/30;
+  }
+
+  .admin-card {
+    @apply rounded-[4px] border border-line bg-cream;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Hairline used as a recurring structural motif down the page. */
+  .edge-l {
+    box-shadow: inset 1px 0 0 0 var(--line);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+/* Anyone who asks for less motion gets a still page, not a slower one. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Locks background scroll while the mobile menu is open. */
+body.menu-open {
+  overflow: hidden;
+}

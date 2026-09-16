@@ -1,0 +1,6 @@
+# Replace REPLACE-WITH-YOUR-DOMAIN below with the live domain before going live.
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://REPLACE-WITH-YOUR-DOMAIN/sitemap.xml
