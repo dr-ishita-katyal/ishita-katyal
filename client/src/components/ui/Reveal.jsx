@@ -59,7 +59,7 @@ export function MaskedLines({ lines, className = '', lineClassName = '', delay =
   );
 }
 
-/** Image wiping open from its bottom edge, with a slight settle of scale. */
+/** Image fading and settling into place as it scrolls into view. */
 export function ImageReveal({ src, srcSet, sizes, alt, className = '', imgClassName = '', priority = false, delay = 0 }) {
   const reduce = useReducedMotion();
 
@@ -81,10 +81,10 @@ export function ImageReveal({ src, srcSet, sizes, alt, className = '', imgClassN
   return (
     <motion.div
       className={`overflow-hidden ${className}`}
-      initial={{ clipPath: 'inset(100% 0% 0% 0%)', scale: 1.06 }}
-      whileInView={{ clipPath: 'inset(0% 0% 0% 0%)', scale: 1 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 1.25, ease: EASE, delay }}
+      initial={{ opacity: 0, scale: 1.06 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={viewportOnce}
+      transition={{ duration: 1.1, ease: EASE, delay }}
     >
       {img}
     </motion.div>

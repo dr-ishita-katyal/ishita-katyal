@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { Section, SectionTitle } from '../ui/Section';
 import { Reveal, MaskedLines } from '../ui/Reveal';
-import { EASE } from '../../lib/motion';
+import { EASE, viewportOnce } from '../../lib/motion';
 import { cdn, cdnSrcSet } from '../../lib/cloudinary';
 
 export default function About({ profile }) {
@@ -24,10 +24,10 @@ export default function About({ profile }) {
           <div className="relative lg:sticky lg:top-[calc(var(--nav-h)+3rem)]">
             <motion.div
               className="relative overflow-hidden bg-sand"
-              initial={reduce ? false : { clipPath: 'inset(0% 0% 100% 0%)' }}
-              whileInView={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 1.2, ease: EASE }}
+              initial={reduce ? false : { opacity: 0, scale: 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={viewportOnce}
+              transition={{ duration: 1.1, ease: EASE }}
             >
               <motion.img
                 src={cdn(image, { width: 900, crop: 'limit' })}

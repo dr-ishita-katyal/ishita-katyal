@@ -51,6 +51,39 @@ export default function Hero({ profile, appointmentUrl }) {
       ? {}
       : { initial: { y: '112%' }, animate: { y: '0%' }, transition: { duration: 1.05, ease: EASE, delay } };
 
+  // Shared CTA markup: rendered inline after the copy on desktop, but moved
+  // below the portrait on mobile (see the two placements below).
+  const ctaButtons = (
+    <motion.div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4" {...seq(0.78)}>
+      <a
+        href={appointmentUrl || '#contact'}
+        onClick={
+          appointmentUrl
+            ? undefined
+            : (e) => {
+                e.preventDefault();
+                scrollTo('contact');
+              }
+        }
+        {...(appointmentUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        className="btn-solid"
+      >
+        <span>Book a consultation</span>
+      </a>
+
+      <a
+        href="#about"
+        onClick={(e) => {
+          e.preventDefault();
+          scrollTo('about');
+        }}
+        className="btn-outline"
+      >
+        <span>Explore my journey</span>
+      </a>
+    </motion.div>
+  );
+
   return (
     <section id="home" ref={ref} className="relative overflow-hidden bg-ivory" aria-label="Introduction">
       {/* Warm wash anchoring the portrait side of the composition. */}
@@ -102,34 +135,7 @@ export default function Hero({ profile, appointmentUrl }) {
               {profile?.heroSubtitle}
             </motion.p>
 
-            <motion.div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4" {...seq(0.78)}>
-              <a
-                href={appointmentUrl || '#contact'}
-                onClick={
-                  appointmentUrl
-                    ? undefined
-                    : (e) => {
-                        e.preventDefault();
-                        scrollTo('contact');
-                      }
-                }
-                {...(appointmentUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                className="btn-solid"
-              >
-                <span>Book a consultation</span>
-              </a>
-
-              <a
-                href="#about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo('about');
-                }}
-                className="btn-outline"
-              >
-                <span>Explore my journey</span>
-              </a>
-            </motion.div>
+            <div className="hidden lg:block">{ctaButtons}</div>
           </div>
 
           {/* ---- Portrait column ---- */}
@@ -201,6 +207,9 @@ export default function Hero({ profile, appointmentUrl }) {
               )}
             </motion.div>
           </div>
+
+          {/* Mobile-only: CTAs render below the portrait instead of above it. */}
+          <div className="lg:hidden">{ctaButtons}</div>
         </div>
 
         {/* ---- Scroll cue ---- */}
