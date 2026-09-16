@@ -102,6 +102,10 @@ const fallback = {
     metaDescription:
       'Dr. Ishita Katyal is a Plastic, Reconstructive and Aesthetic Surgeon with specialist training and experience across leading medical institutions in Mumbai.',
     canonicalUrl: '',
+    ogImage: {
+      url: '/images/og-share-card.jpg',
+      alt: 'Dr. Ishita Katyal — Plastic, Reconstructive & Aesthetic Surgeon',
+    },
     doctorName: 'Dr. Ishita Katyal',
     footerText: 'Plastic, Reconstructive & Aesthetic Surgeon',
     medicalDisclaimer:
