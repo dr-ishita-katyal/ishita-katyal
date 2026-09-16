@@ -18,7 +18,7 @@ export default function Experience({ experience = [] }) {
   }));
 
   return (
-    <Section id="experience" index="05" label="Professional experience" tone="ivory">
+    <Section id="experience" index="04" label="Professional experience" tone="ivory">
       <div className="max-w-measure">
         <SectionTitle id="experience-heading">
           <MaskedLines lines={['Professional', 'experience']} lineClassName="text-heading" />

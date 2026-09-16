@@ -1,21 +1,25 @@
 import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { EASE } from '../../lib/motion';
 
 const NAV = [
-  { id: 'about', label: 'About' },
-  { id: 'expertise', label: 'Expertise' },
-  { id: 'journey', label: 'Education' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'achievements', label: 'Awards' },
-  { id: 'publications', label: 'Publications' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'about', label: 'About', type: 'anchor' },
+  { id: 'services', label: 'Services', type: 'route', to: '/services' },
+  { id: 'journey', label: 'Education', type: 'anchor' },
+  { id: 'experience', label: 'Experience', type: 'anchor' },
+  { id: 'achievements', label: 'Awards', type: 'anchor' },
+  { id: 'publications', label: 'Publications', type: 'anchor' },
+  { id: 'contact', label: 'Contact', type: 'anchor' },
 ];
 
 export default function Footer({ profile, contact, settings }) {
   const [panel, setPanel] = useState(null); // 'privacy' | null
   const year = new Date().getFullYear();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const onHome = location.pathname === '/';
 
   const socials = [
     contact?.instagram && { label: 'Instagram', href: contact.instagram },
@@ -23,7 +27,15 @@ export default function Footer({ profile, contact, settings }) {
     ...((contact?.otherLinks || []).filter((l) => l?.url).map((l) => ({ label: l.label || 'Link', href: l.url }))),
   ].filter(Boolean);
 
-  const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // From the homepage this scrolls directly; from another route it navigates
+  // home first and hands the target off via location state.
+  const go = (id) => {
+    if (!onHome) {
+      navigate('/', { state: { scrollTo: id } });
+      return;
+    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <footer className="relative bg-cocoa text-ivory">
@@ -43,16 +55,22 @@ export default function Footer({ profile, contact, settings }) {
             <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3">
               {NAV.map((item) => (
                 <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      go(item.id);
-                    }}
-                    className="link-wipe text-[0.88rem] text-ivory/80 hover:text-ivory"
-                  >
-                    {item.label}
-                  </a>
+                  {item.type === 'route' ? (
+                    <Link to={item.to} className="link-wipe text-[0.88rem] text-ivory/80 hover:text-ivory">
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={`#${item.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        go(item.id);
+                      }}
+                      className="link-wipe text-[0.88rem] text-ivory/80 hover:text-ivory"
+                    >
+                      {item.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

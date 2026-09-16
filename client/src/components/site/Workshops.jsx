@@ -13,7 +13,7 @@ export default function Workshops({ workshops = [] }) {
   if (!workshops.length) return null;
 
   return (
-    <Section id="workshops" index="09" label="Scientific engagement" tone="sand">
+    <Section id="workshops" index="08" label="Scientific engagement" tone="sand">
       <div className="max-w-measure">
         <SectionTitle id="workshops-heading">
           <MaskedLines lines={['Workshops &', 'scientific engagement']} lineClassName="text-heading" />

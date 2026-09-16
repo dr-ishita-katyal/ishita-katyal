@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Section, SectionTitle } from '../ui/Section';
 import { Reveal, MaskedLines } from '../ui/Reveal';
 import { EASE, viewportOnce } from '../../lib/motion';
+import { slugify } from '../../lib/slug';
 
 const COPY = {
   Reconstructive: 'Restoring form and function after cancer surgery, trauma and burns.',
@@ -71,16 +74,27 @@ export default function Duality({ expertise = [] }) {
 
             <ul className="mt-8 space-y-0">
               {panel.items.map((title, idx) => (
-                <li key={title + idx} className="border-b border-hairline py-3 first:border-t">
-                  <span className="flex items-baseline gap-3">
-                    <span
+                <li key={title + idx} className="border-b border-hairline first:border-t">
+                  <Link
+                    to={`/services/${slugify(title)}`}
+                    className="group/item flex items-baseline justify-between gap-3 py-3 transition-[padding] duration-500 ease-silk hover:pl-2"
+                  >
+                    <span className="flex items-baseline gap-3">
+                      <span
+                        aria-hidden="true"
+                        className={`mt-1 block h-1 w-1 shrink-0 rounded-full transition-colors duration-500 ${
+                          hovered === panel.key ? 'bg-umber' : 'bg-clay/40'
+                        }`}
+                      />
+                      <span className="text-[0.98rem] text-cocoa transition-colors duration-300 group-hover/item:text-ink">
+                        {title}
+                      </span>
+                    </span>
+                    <ArrowUpRight
                       aria-hidden="true"
-                      className={`mt-1 block h-1 w-1 shrink-0 rounded-full transition-colors duration-500 ${
-                        hovered === panel.key ? 'bg-umber' : 'bg-clay/40'
-                      }`}
+                      className="h-3.5 w-3.5 shrink-0 text-clay opacity-0 transition-all duration-300 group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5 group-hover/item:opacity-100"
                     />
-                    <span className="text-[0.98rem] text-cocoa">{title}</span>
-                  </span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -88,10 +102,18 @@ export default function Duality({ expertise = [] }) {
         ))}
       </div>
 
-      <Reveal as="p" delay={0.1} className="mt-8 max-w-measure text-[0.8rem] leading-relaxed text-clay">
-        These reflect documented areas of professional training and interest, not a list of procedures
-        offered at any particular clinic.
-      </Reveal>
+      <div className="mt-8 flex flex-col items-start gap-4 max-w-measure sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[0.8rem] leading-relaxed text-clay">
+          These reflect documented areas of professional training and interest, not a list of procedures
+          offered at any particular clinic.
+        </p>
+        <Link
+          to="/services"
+          className="link-wipe shrink-0 whitespace-nowrap text-[0.78rem] font-semibold uppercase tracking-[0.1em] text-ink"
+        >
+          View all services →
+        </Link>
+      </div>
     </Section>
   );
 }

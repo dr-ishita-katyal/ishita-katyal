@@ -1,17 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { EASE } from '../../lib/motion';
 
 const LINKS = [
-  { id: 'about', label: 'About' },
-  { id: 'expertise', label: 'Expertise' },
-  { id: 'journey', label: 'Journey' },
-  { id: 'achievements', label: 'Achievements' },
-  { id: 'publications', label: 'Publications' },
+  { id: 'about', label: 'About', type: 'anchor' },
+  { id: 'services', label: 'Services', type: 'route', to: '/services' },
+  { id: 'journey', label: 'Journey', type: 'anchor' },
+  { id: 'achievements', label: 'Achievements', type: 'anchor' },
+  { id: 'publications', label: 'Publications', type: 'anchor' },
 ];
 
 export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl }) {
   const reduce = useReducedMotion();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const onHome = location.pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
@@ -24,8 +28,12 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
   }, []);
 
   // Highlights whichever section currently occupies the middle of the viewport.
+  // Only anchor links live on this page; the Services route is matched separately.
   useEffect(() => {
-    const targets = LINKS.map((l) => document.getElementById(l.id)).filter(Boolean);
+    if (!onHome) return;
+    const targets = LINKS.filter((l) => l.type === 'anchor')
+      .map((l) => document.getElementById(l.id))
+      .filter(Boolean);
     if (!targets.length) return;
 
     const observer = new IntersectionObserver(
@@ -40,7 +48,7 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
 
     targets.forEach((t) => observer.observe(t));
     return () => observer.disconnect();
-  }, []);
+  }, [onHome]);
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', open);
@@ -53,15 +61,29 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const go = useCallback((id) => {
-    setOpen(false);
-    const el = document.getElementById(id);
-    if (!el) return;
-    // Let the menu close first so the scroll lands accurately.
-    requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-  }, []);
+  // Scrolls to a homepage section. From another route, navigates home first
+  // and hands off the target via location state so Home can finish the scroll.
+  const go = useCallback(
+    (id) => {
+      setOpen(false);
+      if (!onHome) {
+        navigate('/', { state: { scrollTo: id } });
+        return;
+      }
+      const el = document.getElementById(id);
+      if (!el) return;
+      requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    },
+    [onHome, navigate]
+  );
 
-  const bookHref = appointmentUrl || '#contact';
+  const bookHref = appointmentUrl || (onHome ? '#contact' : undefined);
+  const bookOnClick = appointmentUrl
+    ? undefined
+    : (e) => {
+        e.preventDefault();
+        go('contact');
+      };
 
   return (
     <>
@@ -98,39 +120,48 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
           </a>
 
           <ul className="hidden items-center gap-8 lg:flex">
-            {LINKS.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={`#${link.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    go(link.id);
-                  }}
-                  aria-current={active === link.id ? 'true' : undefined}
-                  className="group relative block py-2 text-[0.78rem] font-medium tracking-[0.06em] text-cocoa transition-colors duration-300 hover:text-ink"
-                >
-                  {link.label}
-                  <span
-                    className={`absolute -bottom-0.5 left-0 h-px w-full origin-left bg-umber transition-transform duration-500 ease-silk ${
-                      active === link.id ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                    }`}
-                  />
-                </a>
-              </li>
-            ))}
+            {LINKS.map((link) => {
+              const isCurrent = link.type === 'route' ? location.pathname.startsWith(link.to) : active === link.id;
+              const underline = (
+                <span
+                  className={`absolute -bottom-0.5 left-0 h-px w-full origin-left bg-umber transition-transform duration-500 ease-silk ${
+                    isCurrent ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}
+                />
+              );
+              const className =
+                'group relative block py-2 text-[0.78rem] font-medium tracking-[0.06em] text-cocoa transition-colors duration-300 hover:text-ink';
+
+              return (
+                <li key={link.id}>
+                  {link.type === 'route' ? (
+                    <Link to={link.to} aria-current={isCurrent ? 'true' : undefined} className={className}>
+                      {link.label}
+                      {underline}
+                    </Link>
+                  ) : (
+                    <a
+                      href={`#${link.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        go(link.id);
+                      }}
+                      aria-current={isCurrent ? 'true' : undefined}
+                      className={className}
+                    >
+                      {link.label}
+                      {underline}
+                    </a>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           <div className="flex items-center gap-3">
             <a
               href={bookHref}
-              onClick={
-                appointmentUrl
-                  ? undefined
-                  : (e) => {
-                      e.preventDefault();
-                      go('contact');
-                    }
-              }
+              onClick={bookOnClick}
               {...(appointmentUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               className="btn-solid hidden !px-6 !py-3 text-[0.68rem] sm:inline-flex"
             >
@@ -179,26 +210,45 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
           >
             <div className="shell flex h-full flex-col justify-between pb-10 pt-[calc(var(--nav-h)+2rem)]">
               <ul className="flex flex-col">
-                {LINKS.map((link, i) => (
-                  <li key={link.id} className="overflow-hidden border-b border-hairline">
-                    <motion.a
-                      href={`#${link.id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        go(link.id);
-                      }}
-                      className="flex items-baseline gap-4 py-4"
-                      initial={reduce ? false : { y: '100%', opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.6, ease: EASE, delay: 0.14 + i * 0.06 }}
-                    >
+                {LINKS.map((link, i) => {
+                  const rowContent = (
+                    <>
                       <span className="w-6 font-display text-sm text-umber">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span className="font-display text-[2rem] leading-none text-ink">{link.label}</span>
-                    </motion.a>
-                  </li>
-                ))}
+                    </>
+                  );
+                  const motionProps = {
+                    className: 'flex items-baseline gap-4 py-4',
+                    initial: reduce ? false : { y: '100%', opacity: 0 },
+                    animate: { y: 0, opacity: 1 },
+                    transition: { duration: 0.6, ease: EASE, delay: 0.14 + i * 0.06 },
+                  };
+
+                  return (
+                    <li key={link.id} className="overflow-hidden border-b border-hairline">
+                      {link.type === 'route' ? (
+                        <motion.div {...motionProps}>
+                          <Link to={link.to} onClick={() => setOpen(false)} className="flex items-baseline gap-4">
+                            {rowContent}
+                          </Link>
+                        </motion.div>
+                      ) : (
+                        <motion.a
+                          href={`#${link.id}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            go(link.id);
+                          }}
+                          {...motionProps}
+                        >
+                          {rowContent}
+                        </motion.a>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
 
               <motion.div
@@ -209,14 +259,7 @@ export default function Nav({ name = 'Dr. Ishita Katyal', title, appointmentUrl 
               >
                 <a
                   href={bookHref}
-                  onClick={
-                    appointmentUrl
-                      ? () => setOpen(false)
-                      : (e) => {
-                          e.preventDefault();
-                          go('contact');
-                        }
-                  }
+                  onClick={appointmentUrl ? () => setOpen(false) : bookOnClick}
                   {...(appointmentUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="btn-solid w-full"
                 >

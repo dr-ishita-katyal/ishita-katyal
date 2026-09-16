@@ -33,7 +33,7 @@ export default function Gallery({ gallery = [] }) {
   if (!gallery.length) return null;
 
   return (
-    <Section id="gallery" index="10" label="Gallery" tone="ivory">
+    <Section id="gallery" index="09" label="Gallery" tone="ivory">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <SectionTitle id="gallery-heading">
           <MaskedLines lines={['Gallery']} lineClassName="text-heading" />

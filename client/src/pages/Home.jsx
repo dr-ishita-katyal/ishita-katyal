@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSite } from '../context/SiteContext';
 import { applySeo, setRobots, buildStructuredData, injectStructuredData } from '../lib/seo';
 
@@ -7,7 +8,6 @@ import Hero from '../components/site/Hero';
 import Credentials from '../components/site/Credentials';
 import About from '../components/site/About';
 import Duality from '../components/site/Duality';
-import Expertise from '../components/site/Expertise';
 import Education from '../components/site/Education';
 import Experience from '../components/site/Experience';
 import SpecialistTraining from '../components/site/SpecialistTraining';
@@ -23,6 +23,8 @@ export default function Home() {
   const site = useSite();
   const { profile, contact, settings, education, experience, expertise, awards, publications, workshops, gallery } =
     site;
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const show = settings?.sections || {};
 
@@ -38,6 +40,18 @@ export default function Home() {
     injectStructuredData(buildStructuredData({ profile, contact, settings, education }));
   }, [settings, profile, contact, education]);
 
+  // Finishes a scroll requested by the nav/footer from another route (e.g.
+  // clicking "About" while on /services). Clears the state so the browser
+  // back button doesn't re-trigger the scroll.
+  useEffect(() => {
+    const target = location.state?.scrollTo;
+    if (!target) return;
+    const el = document.getElementById(target);
+    if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    navigate(location.pathname, { replace: true, state: {} });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
+
   return (
     <div className="relative">
       <div aria-hidden="true" className="grain-overlay" />
@@ -49,7 +63,6 @@ export default function Home() {
         <Credentials profile={profile} />
         <About profile={profile} />
         <Duality expertise={expertise} />
-        <Expertise expertise={expertise} />
         <Education education={education} />
         <Experience experience={experience} />
         {show.specialistTraining !== false && <SpecialistTraining experience={experience} />}

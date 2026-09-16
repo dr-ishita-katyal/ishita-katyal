@@ -26,7 +26,7 @@ export default function SpecialistTraining({ experience = [] }) {
   });
 
   return (
-    <Section id="training" index="06" label="Specialist training" tone="cream">
+    <Section id="training" index="05" label="Specialist training" tone="cream">
       <div className="max-w-measure">
         <SectionTitle id="training-heading">
           <MaskedLines lines={['Specialist', 'training']} lineClassName="text-heading" />

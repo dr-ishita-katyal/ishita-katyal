@@ -9,7 +9,7 @@ export default function Awards({ awards = [] }) {
   if (!awards.length) return null;
 
   return (
-    <Section id="achievements" index="07" label="Credits & awards" tone="sand">
+    <Section id="achievements" index="06" label="Credits & awards" tone="sand">
       <div className="max-w-measure">
         <SectionTitle id="achievements-heading">
           <MaskedLines lines={['Credits', '& awards']} lineClassName="text-heading" />

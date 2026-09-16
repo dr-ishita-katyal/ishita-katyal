@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link, Outlet } from 'react-router-dom';
 import { SiteProvider } from './context/SiteContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './components/admin/Toast';
 import Home from './pages/Home';
+import Services from './pages/Services';
+import ServiceDetail from './pages/ServiceDetail';
 
 // The admin bundle only loads for people who actually visit /admin.
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
@@ -23,14 +25,13 @@ export default function App() {
         <ToastProvider>
           <Suspense fallback={<RouteFallback />}>
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <SiteProvider>
-                    <Home />
-                  </SiteProvider>
-                }
-              />
+              {/* Public pages share one SiteProvider so navigating between them
+                  doesn't refetch the site content on every click. */}
+              <Route element={<SiteProvider><Outlet /></SiteProvider>}>
+                <Route path="/" element={<Home />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/services/:slug" element={<ServiceDetail />} />
+              </Route>
 
               <Route path="/admin/login" element={<Login />} />
               <Route path="/admin" element={<AdminLayout />}>
@@ -67,7 +68,7 @@ function NotFound() {
     <div className="flex min-h-[100svh] flex-col items-center justify-center bg-ivory px-6 text-center">
       <p className="font-display text-[clamp(4rem,14vw,9rem)] leading-none text-ink">404</p>
       <p className="mt-4 max-w-[38ch] text-[0.95rem] leading-relaxed text-clay">
-        That page does not exist. Everything lives on one page here.
+        That page does not exist.
       </p>
       <Link to="/" className="btn-solid mt-8">
         <span>Back to the website</span>

@@ -9,7 +9,7 @@ export default function Publications({ publications = [] }) {
   if (!publications.length) return null;
 
   return (
-    <Section id="publications" index="08" label="Publications" tone="ivory">
+    <Section id="publications" index="07" label="Publications" tone="ivory">
       <div className="max-w-measure">
         <SectionTitle id="publications-heading">
           <MaskedLines lines={['Published', 'work']} lineClassName="text-heading" />

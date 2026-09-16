@@ -22,7 +22,7 @@ export default function Education({ education = [] }) {
   }));
 
   return (
-    <Section id="journey" index="04" label="Education & training" tone="sand">
+    <Section id="journey" index="03" label="Education & training" tone="sand">
       <div className="max-w-measure">
         <SectionTitle id="journey-heading">
           <MaskedLines lines={['Education', '& training']} lineClassName="text-heading" />
