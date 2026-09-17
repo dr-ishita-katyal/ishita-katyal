@@ -50,7 +50,7 @@ export default function Services() {
               <div className="lg:col-span-7">
                 <p className="marker mb-6">Services</p>
                 <h1 className="text-title text-ink">
-                  <MaskedLines lines={['Areas of', 'expertise']} lineClassName="text-title" />
+                  <MaskedLines lines={['Areas of', 'expertise']} lineClassName="text-title" immediate delay={0.1} />
                 </h1>
                 <Reveal as="p" delay={0.12} className="lede mt-7 max-w-[46ch]">
                   The areas of plastic, reconstructive and aesthetic surgery my specialist training and

@@ -33,8 +33,23 @@ export function Reveal({ as = 'div', delay = 0, y = 24, className = '', children
  * Type sliding up from behind a mask. `lines` is an array of strings; each gets
  * its own overflow-hidden row so the movement reads as a printed line settling.
  */
-export function MaskedLines({ lines, className = '', lineClassName = '', delay = 0, stagger = 0.07 }) {
+export function MaskedLines({
+  lines,
+  className = '',
+  lineClassName = '',
+  delay = 0,
+  stagger = 0.07,
+  immediate = false,
+}) {
   const reduce = useReducedMotion();
+
+  // Scroll-triggered by default (for lines that appear lower on the page).
+  // `immediate` plays the reveal on mount instead — use this for anything
+  // rendered above the fold, since it's already in the viewport when it
+  // mounts and a scroll-into-view observer may never fire for it.
+  const trigger = immediate
+    ? { animate: { y: '0%' } }
+    : { whileInView: { y: '0%' }, viewport: viewportOnce };
 
   return (
     <span className={className}>
@@ -46,8 +61,7 @@ export function MaskedLines({ lines, className = '', lineClassName = '', delay =
             <motion.span
               className={`block ${lineClassName}`}
               initial={{ y: '112%' }}
-              whileInView={{ y: '0%' }}
-              viewport={viewportOnce}
+              {...trigger}
               transition={{ duration: 1, ease: EASE, delay: delay + i * stagger }}
             >
               {line}
