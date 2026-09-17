@@ -28,14 +28,20 @@ export default function Duality({ expertise = [] }) {
 
   return (
     <Section id="practice" index="02" label="Two dimensions" tone="cream">
-      <div className="max-w-measure">
-        <SectionTitle id="practice-heading">
-          <MaskedLines lines={['Two dimensions of', 'the same discipline']} lineClassName="text-heading" />
-        </SectionTitle>
-        <Reveal as="p" delay={0.1} className="lede mt-6">
-          Reconstructive and aesthetic surgery draw on one body of technique. These are the areas my
-          training and practice have centred on.
-        </Reveal>
+      <div className="grid grid-cols-1 gap-x-12 gap-y-10 lg:grid-cols-12 lg:items-center">
+        <div className="max-w-measure lg:col-span-7">
+          <SectionTitle id="practice-heading">
+            <MaskedLines lines={['Two dimensions of', 'the same discipline']} lineClassName="text-heading" />
+          </SectionTitle>
+          <Reveal as="p" delay={0.1} className="lede mt-6">
+            Reconstructive and aesthetic surgery draw on one body of technique. These are the areas my
+            training and practice have centred on.
+          </Reveal>
+        </div>
+
+        <div className="hidden lg:col-span-5 lg:flex lg:items-center lg:justify-center">
+          <DualityMark />
+        </div>
       </div>
 
       <div
@@ -115,5 +121,59 @@ export default function Duality({ expertise = [] }) {
         </Link>
       </div>
     </Section>
+  );
+}
+
+/**
+ * A quiet Venn mark for the intro row — two practices, one body of
+ * technique. Fills the space beside the copy instead of leaving it bare,
+ * and doubles as a visual echo of "two dimensions of the same discipline".
+ */
+function DualityMark() {
+  const reduce = useReducedMotion();
+  const circle = (cx, delay) =>
+    reduce
+      ? { cx, cy: 140, r: 95 }
+      : {
+          cx,
+          cy: 140,
+          r: 95,
+          initial: { pathLength: 0, opacity: 0 },
+          whileInView: { pathLength: 1, opacity: 1 },
+          viewport: viewportOnce,
+          transition: { duration: 1.4, ease: EASE, delay },
+        };
+
+  const labelStyle = { font: '600 0.62rem/1 Manrope, sans-serif', letterSpacing: '0.16em' };
+
+  return (
+    <motion.svg
+      viewBox="0 0 340 260"
+      className="h-auto w-full max-w-[22rem]"
+      aria-hidden="true"
+      initial={reduce ? false : { opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={viewportOnce}
+      transition={{ duration: 0.6, ease: EASE }}
+    >
+      <motion.circle {...circle(115, 0.1)} fill="none" stroke="currentColor" strokeWidth="1" className="text-umber/60" />
+      <motion.circle {...circle(225, 0.3)} fill="none" stroke="currentColor" strokeWidth="1" className="text-gilt/70" />
+
+      <text x="115" y="22" textAnchor="middle" className="fill-cocoa/80" style={labelStyle}>
+        RECONSTRUCTIVE
+      </text>
+      <text x="225" y="22" textAnchor="middle" className="fill-cocoa/80" style={labelStyle}>
+        AESTHETIC
+      </text>
+      <text
+        x="170"
+        y="252"
+        textAnchor="middle"
+        className="fill-clay"
+        style={{ font: 'italic 500 0.8rem/1 "Cormorant Garamond", serif' }}
+      >
+        one shared technique
+      </text>
+    </motion.svg>
   );
 }

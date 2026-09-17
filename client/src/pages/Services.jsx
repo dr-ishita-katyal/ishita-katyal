@@ -19,6 +19,8 @@ export default function Services() {
 
   const featured = expertise.filter((e) => e.featured);
   const activeItem = featured.find((f) => f._id === active);
+  const reconstructiveCount = featured.filter((e) => e.category === 'Reconstructive').length;
+  const aestheticCount = featured.filter((e) => e.category === 'Aesthetic').length;
 
   useEffect(() => {
     setRobots('index, follow');
@@ -44,14 +46,30 @@ export default function Services() {
         {/* ---- Page header ---- */}
         <section className="relative bg-ivory pb-4 pt-[calc(var(--nav-h)+3.5rem)]">
           <div className="shell">
-            <p className="marker mb-6">Services</p>
-            <h1 className="text-title text-ink">
-              <MaskedLines lines={['Areas of', 'expertise']} lineClassName="text-title" />
-            </h1>
-            <Reveal as="p" delay={0.12} className="lede mt-7 max-w-[46ch]">
-              The areas of plastic, reconstructive and aesthetic surgery my specialist training and
-              practice have concentrated on. Select an area to read more.
-            </Reveal>
+            <div className="grid grid-cols-1 gap-x-12 gap-y-10 lg:grid-cols-12 lg:items-end">
+              <div className="lg:col-span-7">
+                <p className="marker mb-6">Services</p>
+                <h1 className="text-title text-ink">
+                  <MaskedLines lines={['Areas of', 'expertise']} lineClassName="text-title" />
+                </h1>
+                <Reveal as="p" delay={0.12} className="lede mt-7 max-w-[46ch]">
+                  The areas of plastic, reconstructive and aesthetic surgery my specialist training and
+                  practice have concentrated on. Select an area to read more.
+                </Reveal>
+              </div>
+
+              {featured.length > 0 && (
+                <Reveal delay={0.2} className="hidden lg:col-span-5 lg:flex lg:justify-end">
+                  <div className="flex divide-x divide-line border-t border-line pt-7">
+                    <StatBlock value={featured.length} label="Areas of practice" first />
+                    {reconstructiveCount > 0 && (
+                      <StatBlock value={reconstructiveCount} label="Reconstructive" />
+                    )}
+                    {aestheticCount > 0 && <StatBlock value={aestheticCount} label="Aesthetic" />}
+                  </div>
+                </Reveal>
+              )}
+            </div>
           </div>
         </section>
 
@@ -150,6 +168,16 @@ export default function Services() {
       </main>
 
       <Footer profile={profile} contact={contact} settings={settings} />
+    </div>
+  );
+}
+
+/** A single figure, echoing the numbered-stat treatment used elsewhere on the site. */
+function StatBlock({ value, label, first = false }) {
+  return (
+    <div className={`flex flex-col justify-center px-8 ${first ? 'pl-0' : ''}`}>
+      <p className="font-display text-[2.2rem] leading-none text-ink">{String(value).padStart(2, '0')}</p>
+      <p className="mt-2 max-w-[16ch] text-[0.68rem] uppercase tracking-[0.14em] text-clay">{label}</p>
     </div>
   );
 }
