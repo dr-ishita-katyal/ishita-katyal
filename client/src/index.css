@@ -45,6 +45,32 @@
     color: var(--ivory);
   }
 
+  /* ---- Scrollbars ---------------------------------------------------
+     One thin, on-brand scrollbar everywhere (page, admin sidebar, any
+     overflow panel) instead of the default OS chrome. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--umber) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--umber);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ink);
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   /* One visible, consistent focus ring everywhere. */
   :focus-visible {
     outline: 2px solid var(--umber);
